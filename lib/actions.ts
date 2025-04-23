@@ -10,7 +10,7 @@ const ContactSchema = z.object({
     phone: z.string().min(11),
     });
 
-export const saveContact = async (prevState: any, formData: FormData) => {
+export const saveContact = async (_: unknown, formData: FormData) => {
     const validatedFields = ContactSchema.safeParse (Object.fromEntries(formData.entries()));
 
     if(!validatedFields.success){
@@ -26,14 +26,14 @@ export const saveContact = async (prevState: any, formData: FormData) => {
                 phone: validatedFields.data.phone
             }
         })
-    } catch (error) {
+    } catch {
         return {message: "failed to create contact"}
     }
     revalidatePath("/contact");
     redirect("/contact");
 }
 
-export const updateContact = async (id:string, prevState: any, formData: FormData) => {
+export const updateContact = async (id:string, _: unknown, formData: FormData) => {
     const validatedFields = ContactSchema.safeParse (
         Object.fromEntries(formData.entries()));
 
@@ -51,7 +51,7 @@ export const updateContact = async (id:string, prevState: any, formData: FormDat
             },
             where: {id}
         })
-    } catch (error) {
+    } catch {
         return {message: "failed to update contact"}
     }
     revalidatePath("/contact");
@@ -66,7 +66,7 @@ export const deleteContact = async (
         await prisma.contact.delete({
             where: {id},
         });
-    } catch (error) {
+    } catch {
         return {message: "failed to delete contact"};
     }
     revalidatePath("/contact");
